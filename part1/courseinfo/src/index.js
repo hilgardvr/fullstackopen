@@ -21,7 +21,6 @@ const Part = (props) => {
 }
 
 const Content = (props) => {
-    console.log(props)
     const [first, second, third] = props.parts.parts
     return (
         <div>
