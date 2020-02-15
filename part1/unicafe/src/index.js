@@ -34,8 +34,8 @@ const Statistics = (props) => {
             <Statistic text="neutral" value={props.neutral}/>
             <Statistic text="bad" value={props.bad}/>
             <Statistic text="all" value={all}/>
-            <Statistic text="good" value={average}/>
-            <Statistic text="good" value={positive}/>
+            <Statistic text="average" value={average}/>
+            <Statistic text="positive" value={positive}/>
         </div>
     )
 }
