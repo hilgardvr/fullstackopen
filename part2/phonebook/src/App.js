@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 
-const Numbers = (props) =>  {
+const Persons = (props) =>  {
   return (
-    <ul>
-      {props.numbers.map(number => {
-        <li>{number}</li>
-      })}
-    </ul>
+    <div>
+        {props.persons.map(number => <div>{number.name}<br/></div>)}
+    </div>
   )
 }
 
@@ -28,9 +26,6 @@ const App = () => {
 
   return (
     <div>
-      <div>
-        debug: {newName}
-      </div>
       <h2>Phonebook</h2>
       <form onSubmit={addName}>
         <div>
@@ -41,7 +36,7 @@ const App = () => {
         </div>
       </form>
       <h2>Numbers</h2>
-      ...
+      <Persons persons={persons}/>
     </div>
   )
 }
