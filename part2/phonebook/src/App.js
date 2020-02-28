@@ -1,17 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-
-const Persons = (props) =>  {
-  return (
-    <div>
-        {props.persons.map(person => 
-          <div key={person.name}>
-            {person.name} {person.number}<br/>
-          </div>
-        )}
-    </div>
-  )
-}
+import Persons from './components/Persons.js'
+import personService from './services/persons.js'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -19,14 +8,10 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fullfilled: ', response)
-        setPersons(response.data)
-      })
-  }, [])
+    personService.getAll()
+    .then(data => {
+      setPersons(data)
+    })}, [])
 
   const handleChangeName = (event) => {
     setNewName(event.target.value)
@@ -42,15 +27,18 @@ const App = () => {
     if (filtered.length > 0) {
       alert(`${newName} is already added to phonebook`)
     } else {
-      setPersons(persons.concat(
-        {
+      const newPerson = {
           name: newName,
           number: newNumber
-        })
-      )
+        }
+        personService.create(newPerson)
+          .then(data => {
+            setPersons(persons.concat(data))
+            setNewName('')
+            setNewNumber('')
+          })
+        .catch(error => console.log('error: ', error))
     }
-    setNewName('')
-    setNewNumber('')
   }
 
   return (
