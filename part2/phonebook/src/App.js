@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react'
 import Persons from './components/Persons.js'
 import personService from './services/persons.js'
+import Notification from './components/Notification.js'
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [operationMessage, setOperationMessage] = useState(null)
 
   useEffect(() => {
     personService.getAll()
@@ -45,6 +47,8 @@ const App = () => {
             setPersons(persons.concat(data))
             setNewName('')
             setNewNumber('')
+            setOperationMessage(`Successfully added ${data.name}`)
+            setTimeout(() => setOperationMessage(null), 5000)
           })
         .catch(error => console.log('error: ', error))
     }
@@ -52,6 +56,7 @@ const App = () => {
 
   return (
     <div>
+      <Notification message={operationMessage}/>
       <h2>Phonebook</h2>
       <form onSubmit={addName}>
         <div>
