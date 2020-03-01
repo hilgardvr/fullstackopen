@@ -6,4 +6,13 @@ GET http://localhost:3001/api/persons/1
 ### GET undefined
 GET http://localhost:3001/api/persons/2000
 ### DELETE id
-DELETE http://localhost:3001/api/persons/3
+DELETE http://localhost:3001/api/persons/72186
+### Create ne person
+POST http://localhost:3001/api/persons HTTP/1.1
+content-type: application/json
+
+{
+    "name": "Potato Mate",
+    "number": "040-123456"
+}
+###

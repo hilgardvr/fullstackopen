@@ -1,6 +1,11 @@
 const express = require('express')
+const bodyParser = require('body-parser')
+
 const app = express()
 const port = 3001
+
+app.use(bodyParser.json())
+
 
 let persons = [
     {
@@ -49,6 +54,23 @@ app.delete('/api/persons/:id', (req, res) => {
     const pid = Number(req.params.id)
     persons = persons.filter(({id}) => pid !== id)
     res.status(204).end()
+})
+
+app.post('/api/persons', (req, res) => {
+    const id = Math.floor(Math.random() * 100000)
+    const name = req.body.name
+    const found = persons.find(person => person.name === name)
+    if (!name || found) {
+        return res.status(400).json({error: 'invalid name'})
+    } else {
+        const person = {
+            id: id,
+            name: req.body.name,
+            number: req.body.number,
+        }
+        persons = persons.concat(person)
+        res.send(person)
+    }
 })
 
 app.get('/api/persons', (req, res) => {
