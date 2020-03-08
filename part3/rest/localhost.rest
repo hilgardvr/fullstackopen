@@ -2,11 +2,11 @@ GET http://localhost:3001/api/persons
 ### GET INFO
 GET http://localhost:3001/info
 ### GET person
-GET http://localhost:3001/api/persons/1
+GET http://localhost:3001/api/persons/5e61da82cefd891f06869ee9
 ### GET undefined
 GET http://localhost:3001/api/persons/2000
 ### DELETE id
-DELETE http://localhost:3001/api/persons/72186
+DELETE http://localhost:3001/api/persons/5e64a80ca3ac2c37b4828f80
 ### Create ne person
 POST http://localhost:3001/api/persons HTTP/1.1
 content-type: application/json

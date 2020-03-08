@@ -11,7 +11,7 @@ mongoose.connect(url, { useNewUrlParser: true })
     .catch(err => console.log("Error occurred connection to db: ", err))
 
 const phonebookSchema = new mongoose.Schema({
-    id: Number,
+    id: String,
     name: String,
     number: String,
 })

@@ -13,6 +13,18 @@ app.use(morgan('tiny'))
 app.use(bodyParser.json())
 app.use(express.static('build'))
 
+const errorHandler = (error, req, res, next) => {
+    console.error(error.message)
+
+    if (error.name === 'CastError' && error.kind === 'ObjectId') {
+        return res.status(400).send({error: 'malformed id'})
+    }
+
+    next(error)
+}
+
+app.use(errorHandler)
+
 app.get('/', (req, res) => {
     res.send('<h1>Root of API</h>')
 })
@@ -24,19 +36,25 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = Number(req.params.id)
-    const person = persons.find(person => person.id === id)
-    if (person) {
-        res.send(person)
-    } else {
-        res.status(404).end()
-    }
+    const id = req.params.id
+    Phonebook.findById(id)
+        .then(person => {
+            if (person) {
+                res.json(person.toJSON())
+            } else {
+                res.status(404).end()
+            }
+        })
+        .catch(error => next(error))
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-    const pid = Number(req.params.id)
-    persons = persons.filter(({id}) => pid !== id)
-    res.status(204).end()
+    const id = req.params.id
+    Phonebook.findByIdAndDelete(id)
+        .then(result => {
+            res.status(204).end()
+        })
+        .catch(error => next(error))
 })
 
 app.post('/api/persons', (req, res) => {
