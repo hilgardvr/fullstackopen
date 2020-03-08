@@ -1,39 +1,17 @@
+require('dotenv').config()
 const express = require('express')
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const Phonebook = require('./model/mongo')
 
 const app = express()
-const port = process.env.PORT || 3001
+const port = process.env.PORT
 
 app.use(cors())
 app.use(morgan('tiny'))
 app.use(bodyParser.json())
 app.use(express.static('build'))
-
-
-let persons = [
-    {
-        name: "Arto Hellas",
-        number: "040-123456",
-        id: 1
-    },
-    {
-        name: "Ada Lovelace",
-        number: "39-44-5323523",
-        id: 4
-    },
-    {
-        name: "Dan Abramov",
-        number: "12-43-234345",
-        id: 3
-    },
-    {
-        name: "Mary Poppendieck",
-        number: "35-23-6423122",
-        id: 4
-    }
-]
 
 app.get('/', (req, res) => {
     res.send('<h1>Root of API</h>')
@@ -62,24 +40,22 @@ app.delete('/api/persons/:id', (req, res) => {
 })
 
 app.post('/api/persons', (req, res) => {
-    const id = Math.floor(Math.random() * 100000)
     const name = req.body.name
-    const found = persons.find(person => person.name === name)
-    if (!name || found) {
+    if (!name) {
         return res.status(400).json({error: 'invalid name'})
     } else {
-        const person = {
-            id: id,
+        const person = new Phonebook({
             name: req.body.name,
             number: req.body.number,
-        }
-        persons = persons.concat(person)
-        res.send(person)
+        })
+        person.save().then(savedPerson => res.json(savedPerson.toJSON()))
     }
 })
 
 app.get('/api/persons', (req, res) => {
-    res.json(persons)
+    Phonebook.find({}).then(result => {
+        res.json(result)
+    })
 })
 
 app.listen(port)
