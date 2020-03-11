@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 app.use(express.static('build'));
 
 const errorHandler = (error, req, res, next) => {
+  // eslint-disable-next-line no-console
   console.error(error.message);
 
   if (error.name === 'CastError' && error.kind === 'ObjectId') {
@@ -36,45 +37,47 @@ app.get('/info', (req, res) => {
 });
 
 app.get('/api/persons/:id', (req, res) => {
-  const id = req.params.id;
+  const {id} = req.params;
   Phonebook.findById(id)
-    .then(person => {
+    .then((person) => {
       if (person) {
         res.json(person.toJSON());
       } else {
         res.status(404).end();
       }
     })
-    .catch(error => next(error));
+    // eslint-disable-next-line no-undef
+    .catch((error) => next(error));
 });
 
 app.delete('/api/persons/:id', (req, res) => {
-  const id = req.params.id;
+  const {id} = req.params;
   Phonebook.findByIdAndDelete(id)
-    .then(result => {
+    .then(() => {
       res.status(204).end();
     })
-    .catch(error => next(error));
+    // eslint-disable-next-line no-undef
+    .catch((error) => next(error));
 });
 
 app.post('/api/persons', (req, res) => {
-  const name = req.body.name;
+  const {name} = req.body;
   if (!name) {
     return res.status(400).json({error: 'invalid name'});
-  } else {
-    const person = new Phonebook({
-      name: req.body.name,
-      number: req.body.number,
-    });
-    person.save().then(savedPerson => res.json(savedPerson.toJSON()));
   }
+  const person = new Phonebook({
+    name: req.body.name,
+    number: req.body.number,
+  });
+  person.save().then((savedPerson) => res.json(savedPerson.toJSON()));
 });
 
 app.get('/api/persons', (req, res) => {
-  Phonebook.find({}).then(result => {
+  Phonebook.find({}).then((result) => {
     res.json(result);
   });
 });
 
 app.listen(port);
-console.log("App is running on port: " + port);
+// eslint-disable-next-line no-console
+console.log(`App is running on port: ${port}`);
